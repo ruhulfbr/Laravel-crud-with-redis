@@ -44,8 +44,10 @@ Route::get('/', function (Request $request) {
 
     echo "<pre>";
     print_r(DB::getQueryLog());
+    print_r($users->toArray());
 
     echo "Last Page = ".Cache::get('users_last_page').PHP_EOL;
+    exit();
 
     return view('welcome', ['users' => $users]);
 });
