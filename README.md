@@ -1,12 +1,12 @@
 # Laravel-crud-with-redis
 
 <pre>
-<h5>1. Redis server: install/launch</h5>
+<h2>1. Redis server: install/launch</h2>
 Redis is not a Laravel-specific system, it is installed separately, just follow its official installation instructions.
 
 Then, just launch it with the command redis-server.
 
-<h5>2. Install Redis PHP Extension </h5>
+<h2>2. Install Redis PHP Extension </h2>
 Ensure you have the Redis PHP extension installed:
 
 For Ubuntu based systems:
@@ -15,12 +15,12 @@ sudo apt-get install redis php8.1-redis
 
 sudo systemctl restart php8.1-fpm.service
 
-<h5>3. Install Predis Package </h5>
+<h2>3. Install Predis Package </h2>
 Predis is a flexible and feature-complete Redis client for PHP. Install it via Composer:
 
 composer require predis/predis
 
-<h5>4. Configure Redis in Laravel</h5>
+<h2>4. Configure Redis in Laravel</h2>
 Change the CACHE_STORE to redis in the .env file:
 
 CACHE_STORE=redis
@@ -32,7 +32,7 @@ REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
 
-<h5>5. Use Redis in Laravel for Caching</h5>
+<h2>5. Use Redis in Laravel for Caching</h2>
 <b>5.1 Cache an Eloquent Query</b>
 Suppose you have an Eloquent query like this:
 
