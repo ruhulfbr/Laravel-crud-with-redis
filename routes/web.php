@@ -2,12 +2,19 @@
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+
+use Junges\Kafka\Contracts\ConsumerMessage;
+use Junges\Kafka\Contracts\MessageConsumer;
+use Junges\Kafka\Facades\Kafka;
+use Junges\Kafka\Message\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +26,9 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::get('product', [ProductController::class, 'index']);
 
 Route::get('/', function (Request $request) {
 
@@ -56,6 +66,30 @@ Route::get('/redis-subscribe', function () {
     Redis::publish('test-channel', json_encode([
         'name' => 'Adam Wathan'.time()
     ]));
+});
+
+Route::get('/kafka-publish', function () {
+    $user = User::find(1);
+    $message = new Message(
+        headers: ['header-key' => 'header-value'],
+        body: json_encode($user),
+        key: 'kafka key here'
+    );
+
+    $producer = Kafka::publish('broker')->onTopic('topic')->withMessage($message);
+    $producer->send();
+});
+
+Route::get('/kafka-consume', function () {
+    $consumer = Kafka::consumer();
+
+    // Using callback:
+    $consumer->withHandler(function(ConsumerMessage $message, MessageConsumer $consumer) {
+        // Handle your message here
+        print_r($message->getBody());
+
+        Log::info('Consumer started');
+    });
 });
 
 Route::resource('users', UserController::class)->except(['delete']);
